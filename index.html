@@ -12,15 +12,21 @@
       padding: 2rem;
       background: url('background-image.png') no-repeat center center fixed;
       background-size: cover;
+      min-height: 100vh;
+      padding-bottom: 4rem; /* extra bottom padding for content */
     }
+
     h1 {
       font-family: 'Great Vibes', cursive;
       font-size: 3rem;
+      color: rgb(0, 0, 91);
     }
+
     .container {
       max-width: 90%;
       margin: auto;
     }
+
     input {
       padding: 0.5rem;
       width: 100%;
@@ -31,23 +37,27 @@
       font-family: 'Playfair Display', serif;
       border-radius: 10px;
       border: 1px solid #ccc;
+      text-align: center; /* Center the placeholder text */
     }
+
     button {
       padding: 0.6rem 1.2rem;
       font-size: 1rem;
       cursor: pointer;
       margin: 0.5rem;
       border: none;
-      background-color: #004080;
+      background-color: #ff0000;
       color: white;
       border-radius: 10px;
       transition: background-color 0.3s, transform 0.3s;
       font-family: 'Playfair Display', serif;
     }
+
     button:hover {
-      background-color: #0059b3;
+      background-color: #5151e0;
       transform: scale(1.05);
     }
+
     canvas {
       width: 100%;
       height: auto;
@@ -56,12 +66,22 @@
       margin: 2rem auto;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
+
     footer {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #c1bdb8;
+      position: fixed;
+      bottom: -100px; /* Initially hidden */
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 0.7rem;
+      padding: 0.3rem 0;
+      background-color: rgba(255, 255, 255, 0.6);
+      color: #555;
+      z-index: 1000;
       font-family: 'Playfair Display', serif;
+      transition: bottom 0.3s;
     }
+
     @media (max-width: 600px) {
       input, button {
         width: 90%;
@@ -70,7 +90,12 @@
       canvas {
         width: 100%;
       }
+      footer {
+        font-size: 0.6rem; /* Slightly larger for better readability */
+        padding: 0.4rem 0; /* Adjust padding for mobile */
+      }
     }
+
   </style>
 </head>
 <body>
@@ -85,11 +110,25 @@
     <canvas id="certificateCanvas" width="1080" height="1550"></canvas>
   </div>
 
-  <footer style="font-size: smaller;">
-    Made by Samir J Sarmah | All rights reserved
+  <footer id="footer">
+   Made by SamJS - All rights reserved
   </footer>
 
   <script>
+    // Function to show the footer when user scrolls to the bottom
+    window.onscroll = function() {
+      const footer = document.getElementById("footer");
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // Show footer when the user is at the bottom of the page
+      if (scrollPosition >= documentHeight) {
+        footer.style.bottom = "0";  // Make footer visible
+      } else {
+        footer.style.bottom = "-100px";  // Hide footer
+      }
+    };
+
     async function generateCertificate() {
       const name = document.getElementById("nameInput").value.trim();
       if (!name) return alert("Please enter a name");
@@ -97,7 +136,7 @@
       const canvas = document.getElementById("certificateCanvas");
       const ctx = canvas.getContext("2d");
       const image = new Image();
-      image.src = "certificate_template.jpg"; // hosted certificate template image
+      image.src = "certificate_template.jpg"; // Ensure this path is correct
 
       image.onload = () => {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
@@ -112,11 +151,14 @@
         link.download = `${name}_Certificate.jpg`;
         link.style.display = "inline-block";
 
-        logCertificate(name);
+        // Optional: Log to console
+        console.log(`Certificate generated for ${name}`);
+      };
+
+      image.onerror = () => {
+        alert("Failed to load the certificate template. Please check the image path.");
       };
     }
-
-    
   </script>
 </body>
 </html>
