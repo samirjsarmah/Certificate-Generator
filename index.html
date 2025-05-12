@@ -14,6 +14,7 @@
       background-size: cover;
       min-height: 100vh;
       padding-bottom: 4rem; /* extra bottom padding for content */
+      position: relative; /* Allow footer to be placed at the bottom */
     }
 
     h1 {
@@ -68,8 +69,8 @@
     }
 
     footer {
-      position: fixed;
-      bottom: -100px; /* Initially hidden */
+      position: absolute;
+      bottom: 0;
       left: 0;
       width: 100%;
       text-align: center;
@@ -77,9 +78,7 @@
       padding: 0.3rem 0;
       background-color: rgba(255, 255, 255, 0.6);
       color: #555;
-      z-index: 1000;
       font-family: 'Playfair Display', serif;
-      transition: bottom 0.3s;
     }
 
     @media (max-width: 600px) {
@@ -95,7 +94,6 @@
         padding: 0.4rem 0; /* Adjust padding for mobile */
       }
     }
-
   </style>
 </head>
 <body>
@@ -111,24 +109,10 @@
   </div>
 
   <footer id="footer">
-   Made by SamJS - All rights reserved
+    Made by SamJS - All rights reserved
   </footer>
 
   <script>
-    // Function to show the footer when user scrolls to the bottom
-    window.onscroll = function() {
-      const footer = document.getElementById("footer");
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const documentHeight = document.documentElement.scrollHeight;
-
-      // Show footer when the user is at the bottom of the page
-      if (scrollPosition >= documentHeight) {
-        footer.style.bottom = "0";  // Make footer visible
-      } else {
-        footer.style.bottom = "-100px";  // Hide footer
-      }
-    };
-
     async function generateCertificate() {
       const name = document.getElementById("nameInput").value.trim();
       if (!name) return alert("Please enter a name");
@@ -150,6 +134,10 @@
         link.href = canvas.toDataURL("image/jpeg");
         link.download = `${name}_Certificate.jpg`;
         link.style.display = "inline-block";
+
+        // Show the footer after certificate is generated
+        const footer = document.getElementById("footer");
+        footer.style.bottom = "0";  // Ensure footer is visible
 
         // Optional: Log to console
         console.log(`Certificate generated for ${name}`);
